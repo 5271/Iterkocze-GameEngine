@@ -1,0 +1,21 @@
+Black           0
+Red             1
+Green           2
+Yellow          3
+Blue            4
+Magenta         5
+Cyan            6
+White           7
+Bright Black    90
+Bright Red      91
+Bright Green    92
+Bright Yellow   93
+Bright Blue     94
+Bright Magenta  95
+Bright Cyan     96
+Bright White    97
+
+top 0
+right 1
+bottom 2
+left 3
