@@ -1,7 +1,13 @@
 #pragma once
 
+#include "log.h"
+
+#include <exception>
+#include <stdexcept>
+#include <sys/types.h>
+#include <type_traits>
 #include <vector>
-#include <cstdio>
+#include <cstdio>   
 
 unsigned int getWidth();
 void setWidth();
@@ -23,18 +29,23 @@ class ScreenChar {
 
         ScreenChar (char chInp, int foreColorInp = 7, int backColorInp = 0) {
             ch = chInp;
-            if (foreColorInp<=7) {
-                foreColor = 30+foreColorInp;
+            if (foreColorInp > 15 || foreColorInp < 0 || backColorInp > 15 || backColorInp < 0) {
+                logWarning("Color numbers are between 0 and 15.");
             }
             else {
-                foreColor = 82+foreColorInp;
-            }
+                if (foreColorInp<=7) {
+                    foreColor = 30+foreColorInp;
+                }
+                else {
+                    foreColor = 82+foreColorInp;
+                }
 
-            if (backColorInp<=7) {
-                backColor = 40+backColorInp;
-            }
-            else {
-                backColor = 92+backColorInp;
+                if (backColorInp<=7) {
+                    backColor = 40+backColorInp;
+                }
+                else {
+                    backColor = 92+backColorInp;
+                }
             }
         }
 };
@@ -66,7 +77,14 @@ class Layer {
         }
 
         void putCharAt (Position pos, ScreenChar sch) { // changes one character on a layer
-            layer.at(pos.y).at(pos.x) = sch;
+            try {
+                layer.at(pos.y).at(pos.x) = sch;
+            }
+            catch (const std::exception e) {
+                char* str;
+                std::snprintf(str, 1000, "Position with values x: %i y: %i is out of bound", pos.x, pos.y);
+                logError(str);
+            }
         }
 
         void drawLayer () {
